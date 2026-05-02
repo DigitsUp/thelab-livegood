@@ -1,1130 +1,1392 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="color-scheme: light;">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DigitsUp × LiveGood — Email & SMS Retention Proposal</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>LiveGood × DigitsUp — Email & SMS Retention Strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green:      #3CB54A;
-    --green-dark: #1E6B2A;
-    --green-deep: #0D3312;
-    --gold:       #C8A84B;
-    --gold-light: #F0D078;
-    --ink:        #0A1A0C;
-    --ink2:       #152018;
-    --surface:    #111C12;
-    --card:       #162019;
-    --border:     rgba(60,181,74,0.18);
-    --muted:      rgba(255,255,255,0.45);
-    --white:      #FFFFFF;
+    --forest:      #1A3A2A;
+    --forest-dk:   #122A1E;
+    --gold:        #D4A017;
+    --gold-light:  #E8B82A;
+    --cream:       #F5F0E8;
+    --white:       #FFFFFF;
+    --text-dark:   #1A3A2A;
+    --text-mid:    #4A6B52;
+    --text-light:  #FFFFFF;
+    --border:      #C8D9C4;
+    --orange:      #E8671A;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; color-scheme: light; }
 
   body {
-    background: var(--ink);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
+    background-color: #FFFFFF;
+    color: var(--text-dark);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 16px;
     line-height: 1.65;
     overflow-x: hidden;
-  }
-
-
-  /* ── MAIN CONTENT ── */
-  #main { display: none; }
-  #main.visible { display: block; }
-
-  /* ── PASSWORD GATE ── */
-  #gate {
-    position: fixed; inset: 0; z-index: 999;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    transition: opacity .7s ease, visibility .7s ease;
-  }
-  #gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-  .gate-bg {
-    position: absolute; inset: 0;
-    background: var(--ink);
-  }
-  .gate-bg::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 100%, rgba(30,107,42,.5) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 30% at 80% 10%, rgba(60,181,74,.08) 0%, transparent 60%);
-  }
-  .gate-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(60,181,74,.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(60,181,74,.07) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
-  }
-
-  .gate-box {
-    position: relative;
-    width: 100%; max-width: 440px;
-    background: rgba(22,32,25,.85);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(60,181,74,.25);
-    border-radius: 20px;
-    padding: 52px 44px 40px;
-    text-align: center;
-    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(60,181,74,.08) inset;
-    animation: gateIn .8s cubic-bezier(.16,1,.3,1) both;
-  }
-
-  @keyframes gateIn {
-    from { opacity: 0; transform: translateY(32px) scale(.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .gate-logo-wrap {
-    display: flex; align-items: center; justify-content: center;
-    gap: 14px; margin-bottom: 24px;
-  }
-  .gate-logo-mark {
-    width: 44px; height: 44px;
-    background: var(--green-deep);
-    border: 1px solid rgba(60,181,74,.35);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px; color: var(--green);
-    box-shadow: 0 0 20px rgba(60,181,74,.15);
-  }
-  .gate-logo-mark.lg {
-    background: rgba(60,181,74,.12);
-    border-color: rgba(60,181,74,.4);
-  }
-  .gate-x {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px; color: var(--muted);
-    font-weight: 300;
-  }
-
-  .gate-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px; color: var(--white);
-    letter-spacing: -.3px;
-    margin-bottom: 6px;
-  }
-  .gate-sub {
-    font-size: 11px; letter-spacing: 1.5px;
-    color: var(--muted); text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-  .gate-line {
-    width: 40px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--green), transparent);
-    margin: 0 auto 28px;
-  }
-  .gate-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--green); opacity: .8;
-    margin-bottom: 12px;
-  }
-  .gate-input {
-    width: 100%;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(60,181,74,.2);
-    border-radius: 10px;
-    padding: 15px 20px;
-    color: var(--white);
-    font-family: 'Space Mono', monospace;
-    font-size: 18px; letter-spacing: 8px;
-    text-align: center;
-    outline: none;
-    transition: border-color .25s, box-shadow .25s, background .25s;
-    margin-bottom: 14px;
-  }
-  .gate-input::placeholder { letter-spacing: 4px; font-size: 14px; opacity: .3; }
-  .gate-input:focus {
-    border-color: var(--green);
-    background: rgba(60,181,74,.06);
-    box-shadow: 0 0 0 3px rgba(60,181,74,.12);
-  }
-  .gate-input.shake {
-    animation: shake .4s ease;
-    border-color: #f66;
-    box-shadow: 0 0 0 3px rgba(255,80,80,.12);
-  }
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-8px); }
-    40%      { transform: translateX(8px); }
-    60%      { transform: translateX(-5px); }
-    80%      { transform: translateX(5px); }
-  }
-
-  .gate-btn {
-    width: 100%;
-    background: var(--green);
-    color: var(--ink);
-    border: none;
-    border-radius: 10px;
-    padding: 15px 20px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 600; letter-spacing: .5px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    transition: background .2s, transform .15s, box-shadow .2s;
-    box-shadow: 0 4px 20px rgba(60,181,74,.3);
-    position: relative; overflow: hidden;
-  }
-  .gate-btn::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
-    opacity: 0; transition: opacity .2s;
-  }
-  .gate-btn:hover { background: #44c955; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(60,181,74,.4); }
-  .gate-btn:hover::before { opacity: 1; }
-  .gate-btn:active { transform: scale(.98); }
-  .btn-arrow { font-size: 16px; transition: transform .2s; }
-  .gate-btn:hover .btn-arrow { transform: translateX(4px); }
-
-  .gate-error {
-    margin-top: 12px; min-height: 18px;
-    font-size: 12px; color: #f87;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: .5px;
-  }
-  .gate-footer {
-    margin-top: 28px;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(255,255,255,.2);
-  }
-
-  /* ── NOISE TEXTURE ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    opacity: .4;
+    -webkit-text-size-adjust: 100%;
   }
 
   /* ── NAV ── */
   nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(10,26,12,.92);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px;
-    height: 58px;
+    padding: 0 52px;
+    height: 64px;
+    background-color: rgba(26,58,42,0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(200,217,196,0.2);
   }
-  .nav-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 15px;
-    color: var(--green);
-    letter-spacing: 2px;
+  .nav-brand { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .nav-livegood {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 20px; letter-spacing: 0.05em;
+    color: #FFFFFF; text-transform: uppercase;
   }
-  .nav-links {
-    display: flex; gap: 28px; list-style: none;
+  .nav-livegood .oo { color: var(--orange); }
+  .nav-sep { width: 1px; height: 20px; background: rgba(200,217,196,0.3); }
+  .nav-digits {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 13px; letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.45); text-transform: uppercase;
   }
-  .nav-links a {
-    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--muted); text-decoration: none;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--green); }
-  @media(max-width:640px){ .nav-links { display: none; } }
 
-  /* ── HERO ── */
+  .nav-tabs { display: flex; gap: 0; list-style: none; }
+  .nav-tab-btn {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.5); text-decoration: none; text-transform: uppercase;
+    padding: 0 22px; height: 64px;
+    display: flex; align-items: center;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    cursor: pointer; background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .nav-tab-btn:hover { color: rgba(255,255,255,0.8); }
+  .nav-tab-btn.active { color: #FFFFFF; border-bottom-color: var(--gold); }
+
+  .nav-badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--forest); background-color: var(--gold);
+    padding: 7px 14px; border-radius: 30px; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  /* ── TAB SECTIONS ── */
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  /* ── HERO — dark bg ── */
   .hero {
-    position: relative;
     min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center;
-    padding: 100px 24px 80px;
-    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 140px 52px 88px;
+    position: relative; overflow: hidden;
+    background-color: var(--forest-dk);
   }
-  .hero-bg {
+  .hero-dots {
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(30,107,42,.35) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 40% at 20% 20%, rgba(60,181,74,.08) 0%, transparent 60%);
+    background-image: radial-gradient(rgba(212,160,23,0.12) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
   }
-  .hero-grid {
+  .hero-glow {
     position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(60,181,74,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(60,181,74,.06) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 80%);
+    background:
+      radial-gradient(ellipse 55% 50% at 80% 25%, rgba(212,160,23,0.15) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 45% at 15% 75%, rgba(26,58,42,0.8) 0%, transparent 60%),
+      linear-gradient(to bottom, transparent 45%, rgba(18,42,30,0.8) 100%);
+  }
+  .hero-ambient {
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 1; overflow: hidden;
+  }
+  .amb {
+    position: absolute; border-radius: 50%;
+    filter: blur(55px); opacity: 0;
+    animation: ambDrift ease-in-out infinite;
+  }
+  .amb-1 {
+    width: 580px; height: 580px;
+    background: radial-gradient(circle, rgba(212,160,23,0.18) 0%, transparent 65%);
+    top: -10%; left: 15%; animation-duration: 18s; animation-delay: 0s;
+  }
+  .amb-2 {
+    width: 460px; height: 460px;
+    background: radial-gradient(circle, rgba(212,160,23,0.10) 0%, transparent 65%);
+    top: 25%; left: 60%; animation-duration: 22s; animation-delay: -8s;
+  }
+  .amb-3 {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(26,58,42,0.6) 0%, transparent 65%);
+    top: 60%; left: -5%; animation-duration: 20s; animation-delay: -13s;
+  }
+  @keyframes ambDrift {
+    0%   { opacity: 0; transform: translate(0px, 0px); }
+    6%   { opacity: 1; }
+    30%  { transform: translate(50px, -40px); }
+    55%  { transform: translate(-25px, 55px); }
+    75%  { transform: translate(35px, 15px); }
+    94%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(0px, 0px); }
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.22em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex; align-items: center; gap: 10px;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow::before { content: ''; display: block; width: 24px; height: 2px; background-color: var(--gold); border-radius: 2px; }
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(64px, 11vw, 148px);
+    font-weight: 900; line-height: 0.9; letter-spacing: -0.01em;
+    text-transform: uppercase; color: #FFFFFF;
+    position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 0.85s ease forwards 0.1s;
+  }
+  .hero-title em { color: var(--gold); font-style: normal; }
+  .hero-sub {
+    font-size: clamp(13px, 1.5vw, 16px); font-weight: 600; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4); text-transform: uppercase;
+    margin-top: 20px; position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 0.85s ease forwards 0.35s;
+  }
+  .hero-intro {
+    margin-top: 48px; max-width: 600px;
+    font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.55);
+    position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 0.85s ease forwards 0.5s;
+  }
+  .hero-intro strong { color: var(--gold); font-weight: 700; }
+  .hero-pills {
+    margin-top: 40px; display: flex; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 0.85s ease forwards 0.65s;
   }
   .hero-pill {
-    position: relative;
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(60,181,74,.12);
-    border: 1px solid rgba(60,181,74,.3);
-    border-radius: 100px;
-    padding: 6px 16px;
-    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 28px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.07em;
+    color: var(--forest); background-color: var(--gold);
+    padding: 8px 18px; border-radius: 30px; text-transform: uppercase;
   }
-  .pill-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-  .hero h1 {
-    position: relative;
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(42px, 7vw, 86px);
-    line-height: 1.05;
-    letter-spacing: -1px;
-    margin-bottom: 12px;
-  }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--green);
-  }
-  .hero-by {
-    position: relative;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-  .hero-desc {
-    position: relative;
-    max-width: 540px;
-    font-size: 17px;
-    color: rgba(255,255,255,.72);
-    margin-bottom: 48px;
-    line-height: 1.7;
+  .hero-pill.outline {
+    background-color: transparent; color: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.18);
   }
   .hero-stats {
-    position: relative;
-    display: flex; gap: 1px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--border);
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative; z-index: 2;
+    opacity: 0; animation: fadeUp 0.85s ease forwards 0.8s;
+    border-top: 1px solid rgba(200,217,196,0.15);
+    padding-top: 40px;
   }
-  .hero-stat {
-    flex: 1; background: var(--card);
-    padding: 20px 28px;
-    text-align: center;
+  .hero-stat { padding: 0 24px 0 0; }
+  .hero-stat:first-child { padding-left: 0; }
+  .hero-stat + .hero-stat { border-left: 1px solid rgba(200,217,196,0.15); padding-left: 24px; }
+  .hero-stat-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1;
   }
-  .hero-stat .val {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--green);
-    display: block;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .hero-stat .lbl {
-    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--muted);
-  }
+  .hero-stat-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
 
-  /* ── SECTIONS ── */
-  section {
-    position: relative;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 96px 40px;
-  }
-  @media(max-width:640px){ section { padding: 72px 24px; } }
+  /* ── SHARED SECTION ── */
+  section { padding: 96px 52px; }
 
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1; max-width: 40px;
-    height: 1px; background: var(--green);
-    opacity: .4;
-  }
-  .section-h {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(30px, 4vw, 48px);
-    line-height: 1.1;
-    margin-bottom: 20px;
-  }
-  .section-h em { font-style: italic; color: var(--green); }
-  .section-intro {
-    font-size: 16px; color: rgba(255,255,255,.65);
-    max-width: 620px; line-height: 1.75;
-    margin-bottom: 52px;
-  }
-
-  /* ── DIVIDER ── */
-  .divider {
-    width: 100%; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 0 40px;
-    width: calc(100% - 80px);
-  }
-
-  /* ── OPPORTUNITY ── */
-  .opp-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  @media(max-width:640px){ .opp-grid { grid-template-columns: 1fr; } }
-  .opp-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color .3s;
-  }
-  .opp-card:hover { border-color: rgba(60,181,74,.4); }
-  .opp-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--green), var(--gold));
-    opacity: 0;
-    transition: opacity .3s;
-  }
-  .opp-card:hover::before { opacity: 1; }
-  .opp-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; letter-spacing: 2px;
-    color: var(--green); opacity: .7;
+  .eyebrow-dark {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+    color: var(--gold); text-transform: uppercase;
     margin-bottom: 12px;
-  }
-  .opp-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 19px;
-    margin-bottom: 10px;
-  }
-  .opp-card p { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
-
-  /* ── FLOWS ── */
-  .flows-list { display: flex; flex-direction: column; gap: 2px; }
-  .flow-row {
-    display: grid; grid-template-columns: 260px 1fr auto;
-    align-items: center;
-    gap: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    transition: background .2s, border-color .2s;
-    animation: fadeUp .5s ease both;
-  }
-  @media(max-width:640px){
-    .flow-row { grid-template-columns: 1fr; gap: 8px; }
-    .flow-badge { justify-self: start; }
-  }
-  .flow-row:hover { background: rgba(30,107,42,.12); border-color: rgba(60,181,74,.3); }
-  .flow-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
-  }
-  .flow-name span {
-    display: block;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 300;
-    color: var(--muted); margin-top: 2px;
-  }
-  .flow-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
-  .flow-badge {
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; letter-spacing: 1px;
-    white-space: nowrap;
-  }
-  .badge-priority { background: rgba(60,181,74,.15); color: var(--green); border: 1px solid rgba(60,181,74,.3); }
-  .badge-phase2   { background: rgba(200,168,75,.1); color: var(--gold); border: 1px solid rgba(200,168,75,.25); }
-
-  /* ── CAMPAIGNS ── */
-  .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
-  @media(max-width:640px){ .tier-grid { grid-template-columns: 1fr; } }
-  .tier-card {
-    border-radius: 14px;
-    padding: 36px 30px;
-    position: relative;
-    overflow: hidden;
-  }
-  .tier-card.t1 {
-    background: var(--card);
-    border: 1px solid var(--border);
-  }
-  .tier-card.t2 {
-    background: linear-gradient(135deg, var(--green-deep) 0%, rgba(30,107,42,.4) 100%);
-    border: 1px solid rgba(60,181,74,.35);
-  }
-  .tier-eyebrow {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .t1 .tier-eyebrow { color: var(--muted); }
-  .t2 .tier-eyebrow { color: var(--green); }
-  .tier-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 26px;
-    margin-bottom: 6px;
-  }
-  .tier-card .tier-rate {
-    font-family: 'Space Mono', monospace;
-    font-size: 30px;
-    color: var(--green);
-    margin-bottom: 4px;
-  }
-  .tier-card .tier-rate span { font-size: 14px; color: var(--muted); }
-  .tier-card p { font-size: 13px; color: var(--muted); line-height: 1.65; margin-top: 14px; }
-  .tier-features { list-style: none; margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
-  .tier-features li {
-    font-size: 13px; color: rgba(255,255,255,.7);
-    padding-left: 20px; position: relative;
-  }
-  .tier-features li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-size: 11px; top: 2px; }
-
-  /* ── ROADMAP ── */
-  .roadmap { display: flex; flex-direction: column; gap: 0; }
-  .phase {
-    display: grid; grid-template-columns: 100px 1fr;
-    gap: 32px; padding: 40px 0;
-    border-top: 1px solid var(--border);
-    position: relative;
-  }
-  .phase:first-child { border-top: none; }
-  .phase-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 52px;
-    color: rgba(60,181,74,.18);
-    line-height: 1;
-    letter-spacing: -2px;
-    padding-top: 4px;
-  }
-  .phase-content h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    margin-bottom: 6px;
-  }
-  .phase-tag {
-    display: inline-block;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--gold); background: rgba(200,168,75,.1);
-    border: 1px solid rgba(200,168,75,.25);
-    border-radius: 100px; padding: 3px 10px;
-    margin-bottom: 16px;
-  }
-  .phase-items { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-  .phase-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13.5px; color: rgba(255,255,255,.7);
-  }
-  .phase-item::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--green); border-radius: 50%;
-    flex-shrink: 0; margin-top: 7px;
-  }
-
-  /* ── PRICING ── */
-  .pricing-wrap {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    margin-bottom: 32px;
-  }
-  @media(max-width:640px){ .pricing-wrap { grid-template-columns: 1fr; } }
-  .price-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 36px 30px;
-    position: relative;
-  }
-  .price-card.featured {
-    border-color: rgba(60,181,74,.4);
-    background: linear-gradient(160deg, rgba(30,107,42,.25) 0%, var(--card) 60%);
-  }
-  .price-card.featured::after {
-    content: 'RECOMMENDED';
-    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-    background: var(--green);
-    color: var(--ink);
-    font-family: 'Space Mono', monospace;
-    font-size: 9px; letter-spacing: 2px;
-    padding: 4px 14px;
-    border-radius: 0 0 8px 8px;
-  }
-  .price-name {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px; letter-spacing: 3px;
-    color: var(--muted); text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .price-tier { font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: 20px; }
-  .price-val {
-    font-family: 'DM Serif Display', serif;
-    font-size: 48px; line-height: 1;
-    color: var(--white);
-  }
-  .price-val sup { font-size: 22px; vertical-align: top; margin-top: 8px; color: var(--green); }
-  .price-val sub { font-size: 14px; color: var(--muted); vertical-align: bottom; margin-bottom: 6px; }
-  .price-note { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .3px; }
-  .price-items { list-style: none; margin-top: 26px; display: flex; flex-direction: column; gap: 10px; }
-  .price-items li {
-    font-size: 13px; color: rgba(255,255,255,.7);
     display: flex; align-items: center; gap: 10px;
   }
-  .price-items li::before {
-    content: '✓';
-    color: var(--green); font-size: 12px; flex-shrink: 0;
-  }
-  .price-tbd {
-    font-family: 'Space Mono', monospace;
-    font-size: 32px; color: var(--green);
-    opacity: .5; letter-spacing: 3px;
-  }
+  .eyebrow-dark::before { content: ''; display: block; width: 20px; height: 2px; background-color: var(--gold); border-radius: 2px; }
 
-  /* ── GUARANTEE ── */
-  .guarantee {
-    background: linear-gradient(135deg, rgba(200,168,75,.08) 0%, rgba(60,181,74,.06) 100%);
-    border: 1px solid rgba(200,168,75,.2);
-    border-radius: 14px;
-    padding: 36px 36px;
-    display: flex; align-items: flex-start; gap: 24px;
+  .eyebrow-light {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+    color: var(--text-mid); text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
   }
-  .g-icon {
-    font-size: 40px; flex-shrink: 0; line-height: 1;
-  }
-  .guarantee h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 8px; }
-  .guarantee p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .eyebrow-light::before { content: ''; display: block; width: 20px; height: 2px; background-color: var(--gold); border-radius: 2px; }
 
-  /* ── WHY US ── */
-  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media(max-width:640px){ .why-grid { grid-template-columns: 1fr; } }
+  .title-on-dark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 4.8vw, 62px);
+    font-weight: 900; line-height: 0.95; letter-spacing: -0.01em;
+    text-transform: uppercase; color: #FFFFFF; margin-bottom: 28px;
+  }
+  .title-on-dark em { color: var(--gold); font-style: normal; }
+
+  .title-on-light {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(36px, 4.8vw, 62px);
+    font-weight: 900; line-height: 0.95; letter-spacing: -0.01em;
+    text-transform: uppercase; color: var(--text-dark); margin-bottom: 28px;
+  }
+  .title-on-light em { color: var(--gold); font-style: normal; }
+
+  .body-lg-dark  { font-size: 17px; line-height: 1.72; color: rgba(255,255,255,0.5); max-width: 640px; }
+  .body-lg-light { font-size: 17px; line-height: 1.72; color: var(--text-mid); max-width: 640px; }
+
+  /* ── OPPORTUNITY SECTION (dark) ── */
+  .opportunity-section { background-color: var(--forest-dk); border-bottom: 1px solid rgba(200,217,196,0.12); }
+  .opp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 56px; }
+  .opp-card {
+    background-color: rgba(255,255,255,0.05); border: 1px solid rgba(200,217,196,0.15);
+    border-radius: 14px; padding: 32px;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .opp-card:hover { border-color: rgba(212,160,23,0.35); background-color: rgba(212,160,23,0.04); }
+  .opp-title { font-size: 15px; font-weight: 800; color: var(--gold); line-height: 1.3; }
+  .opp-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.65; }
+
+  /* ── WHY DIGITSUP (light/cream) ── */
+  .why-section { background-color: var(--cream); border-bottom: 1px solid var(--border); }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 56px; }
   .why-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px 24px;
+    background-color: #FFFFFF; border: 1px solid var(--border);
+    border-radius: 14px; padding: 32px 36px;
+    display: flex; flex-direction: column; gap: 10px;
   }
-  .why-icon {
-    font-size: 26px; margin-bottom: 14px; display: block;
-  }
-  .why-card h4 { font-family: 'DM Serif Display', serif; font-size: 17px; margin-bottom: 8px; }
-  .why-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .why-num { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--text-mid); text-transform: uppercase; }
+  .why-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; text-transform: uppercase; color: var(--text-dark); }
+  .why-desc { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
 
-  /* ── CTA ── */
-  .cta-section {
+  .platinum-wrap {
+    margin-top: 48px; background-color: var(--forest-dk); border-radius: 16px;
+    padding: 44px 52px; display: flex; align-items: center; gap: 40px;
+  }
+  .platinum-icon { font-size: 52px; flex-shrink: 0; }
+  .platinum-label { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(212,160,23,0.5); margin-bottom: 6px; }
+  .platinum-title { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .platinum-desc { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.65; max-width: 560px; }
+
+  /* ── EMAIL DESIGN EXAMPLES (cream) ── */
+  .design-section { background-color: var(--cream); border-bottom: 1px solid var(--border); }
+  .design-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; }
+  .design-card {
+    background-color: #FFFFFF; border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .design-card-header {
+    background-color: var(--forest); padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .design-card-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--forest);
+    background-color: var(--gold); padding: 4px 12px; border-radius: 30px;
+  }
+  .design-card-dots { display: flex; gap: 5px; }
+  .design-card-dots span { width: 8px; height: 8px; border-radius: 50%; background-color: rgba(255,255,255,0.2); }
+  .design-card-body { padding: 24px; }
+  .design-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 900; text-transform: uppercase;
+    color: var(--text-dark); margin-bottom: 12px; line-height: 1.1;
+  }
+  .design-card-thumb {
+    border-radius: 8px; height: 120px;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(26,58,42,0.04),
+      rgba(26,58,42,0.04) 10px,
+      rgba(26,58,42,0.02) 10px,
+      rgba(26,58,42,0.02) 20px
+    );
+    border: 1px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .design-card-thumb-icon { font-size: 32px; opacity: 0.35; }
+  .design-card-coming {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .design-card-note { font-size: 12px; color: var(--text-mid); margin-top: 4px; line-height: 1.5; }
+
+  /* ── PRICING (dark) ── */
+  .pricing-section { background-color: var(--forest-dk); border-bottom: 1px solid rgba(200,217,196,0.12); }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; }
+  .pricing-card {
+    background-color: rgba(255,255,255,0.05); border: 1px solid rgba(200,217,196,0.15);
+    border-radius: 14px; padding: 40px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .pricing-card.recommended {
+    background-color: rgba(212,160,23,0.07); border-color: rgba(212,160,23,0.4);
+    position: relative;
+  }
+  .pricing-recommended-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background-color: var(--gold); color: var(--forest);
+    padding: 5px 18px; border-radius: 30px;
+  }
+  .pricing-tier { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .pricing-name { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; text-transform: uppercase; color: #FFFFFF; line-height: 1; }
+  .pricing-amount { font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .pricing-amount span { font-size: 18px; color: rgba(255,255,255,0.35); font-weight: 400; font-family: 'Nunito Sans', sans-serif; }
+  .pricing-divider { border: none; border-top: 1px solid rgba(200,217,196,0.12); }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .pricing-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .pricing-features li::before { content: '✓'; color: var(--gold); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── CLOSING (dark) ── */
+  .closing-section { background-color: var(--forest-dk); }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 56px; }
+  .step-card {
+    background-color: rgba(212,160,23,0.07); border: 1px solid rgba(212,160,23,0.15);
+    border-radius: 14px; padding: 32px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .step-n { font-family: 'Barlow Condensed', sans-serif; font-size: 40px; font-weight: 900; color: rgba(212,160,23,0.25); line-height: 1; }
+  .step-title { font-size: 15px; font-weight: 700; color: #FFFFFF; line-height: 1.3; }
+  .step-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ── LIFECYCLES TAB ── */
+  .lifecycles-header { background-color: var(--forest-dk); padding: 96px 52px 72px; }
+  .lifecycles-body { background-color: var(--cream); padding: 72px 52px; }
+
+  .stage-block { margin-bottom: 60px; }
+  .stage-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .stage-badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--forest); background-color: var(--gold);
+    padding: 5px 14px; border-radius: 30px;
+  }
+  .stage-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px; font-weight: 900; text-transform: uppercase;
+    color: var(--text-dark); line-height: 1;
+  }
+  .stage-sub { font-size: 13px; color: var(--text-mid); font-weight: 600; }
+
+  .flows-grid-lc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .flows-grid-lc.two-col { grid-template-columns: 1fr 1fr; }
+  .flows-grid-lc.four-col { grid-template-columns: repeat(4, 1fr); }
+
+  .lc-flow-card {
+    background-color: #FFFFFF; border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 28px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .lc-flow-card:hover { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,160,23,0.08); }
+  .lc-flow-card.featured {
+    background-color: var(--forest); border-color: transparent; grid-column: span 2;
+  }
+  .lc-flow-card.featured:hover { border-color: var(--gold); }
+
+  .lc-flow-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px; font-weight: 900; text-transform: uppercase;
+    color: var(--text-dark); line-height: 1.05;
+  }
+  .lc-flow-card.featured .lc-flow-name { color: #FFFFFF; font-size: 24px; }
+
+  .lc-flow-trigger {
+    font-size: 12px; font-weight: 700; color: var(--text-mid);
+    display: flex; align-items: center; gap: 6px; line-height: 1.4;
+  }
+  .lc-flow-trigger::before { content: '→'; color: var(--gold); font-size: 14px; flex-shrink: 0; }
+  .lc-flow-card.featured .lc-flow-trigger { color: rgba(255,255,255,0.5); }
+
+  .lc-flow-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .lc-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 30px;
+  }
+  .lc-badge-p1 { background-color: var(--gold); color: var(--forest); }
+  .lc-badge-p2 { background-color: rgba(74,107,82,0.15); color: var(--text-mid); border: 1px solid rgba(74,107,82,0.3); }
+  .lc-badge-sms { background-color: rgba(26,58,42,0.1); color: var(--forest); border: 1px solid rgba(26,58,42,0.2); }
+  .lc-flow-card.featured .lc-badge-sms { background-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.15); }
+  .lc-badge-count { background-color: rgba(26,58,42,0.07); color: var(--text-dark); border: 1px solid var(--border); }
+  .lc-flow-card.featured .lc-badge-count { background-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.15); }
+
+  .lc-flow-theme {
+    font-size: 13px; color: var(--text-mid); line-height: 1.55;
+    font-style: italic; padding: 10px 14px;
+    background-color: rgba(212,160,23,0.07); border-radius: 8px;
+    border-left: 3px solid var(--gold);
+  }
+  .lc-flow-card.featured .lc-flow-theme { background-color: rgba(212,160,23,0.1); color: rgba(255,255,255,0.55); }
+
+  .lc-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .lc-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+  .lc-flow-card.featured .lc-step { color: rgba(255,255,255,0.45); }
+  .lc-step-n {
+    font-size: 10px; font-weight: 800; color: var(--forest);
+    background-color: var(--gold); min-width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex-shrink: 0; margin-top: 2px;
+  }
+
+  .stage-connector {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px 0; color: rgba(26,58,42,0.2);
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .stage-connector::before,
+  .stage-connector::after {
+    content: ''; flex: 1; height: 1px; background-color: var(--border);
+  }
+
+  /* ── CAMPAIGNS TAB ── */
+  .campaigns-header { background-color: var(--forest-dk); padding: 96px 52px 72px; }
+  .campaigns-body { background-color: var(--cream); padding: 72px 52px; }
+
+  .segments-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 60px; }
+  .seg-card {
+    background-color: #FFFFFF; border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .seg-icon { font-size: 24px; }
+  .seg-name { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900; text-transform: uppercase; color: var(--text-dark); }
+  .seg-desc { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+
+  .week-block { margin-bottom: 48px; }
+  .week-header {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 20px;
+    padding-bottom: 14px; border-bottom: 2px solid var(--border);
+  }
+  .week-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 32px; font-weight: 900; text-transform: uppercase;
+    color: var(--text-dark); line-height: 1;
+  }
+  .week-dates { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+  .week-theme { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+
+  .sends-list { display: flex; flex-direction: column; gap: 8px; }
+  .send-row {
+    display: grid; grid-template-columns: 52px 100px 1fr auto;
+    gap: 12px; align-items: center;
+    background-color: #FFFFFF; border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 20px;
+    transition: border-color 0.2s;
+  }
+  .send-row:hover { border-color: var(--gold); }
+  .send-row.winback {
+    background-color: rgba(26,58,42,0.04);
+    border-color: rgba(26,58,42,0.15);
+    border-left: 3px solid var(--text-mid);
+  }
+  .send-row.winback:hover { border-color: var(--gold); border-left-color: var(--gold); }
+
+  .send-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 900; color: var(--gold); line-height: 1;
     text-align: center;
-    padding: 100px 40px;
-    position: relative;
-    overflow: hidden;
   }
-  .cta-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(30,107,42,.4) 0%, transparent 70%);
-    pointer-events: none;
+  .send-row.winback .send-num { color: var(--text-mid); font-size: 14px; font-weight: 700; font-family: 'Nunito Sans', sans-serif; letter-spacing: 0.06em; }
+  .send-date { font-size: 12px; font-weight: 700; color: var(--text-mid); }
+  .send-name { font-size: 14px; font-weight: 700; color: var(--text-dark); line-height: 1.3; }
+  .send-angle { font-size: 12px; color: var(--text-mid); margin-top: 2px; line-height: 1.4; }
+  .send-segs { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .seg-pill {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 30px;
   }
-  .cta-section h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 5vw, 56px);
-    margin-bottom: 16px;
-    position: relative;
+  .seg-members { background-color: var(--gold); color: var(--forest); }
+  .seg-nonmember { background-color: rgba(26,58,42,0.12); color: var(--forest); border: 1px solid rgba(26,58,42,0.2); }
+  .seg-engaged { background-color: var(--cream); color: var(--text-dark); border: 1px solid var(--border); }
+  .seg-lapsed { background-color: rgba(74,107,82,0.1); color: var(--text-mid); border: 1px solid rgba(74,107,82,0.25); }
+  .seg-all { background-color: var(--forest); color: #FFFFFF; }
+
+  .sends-total {
+    margin-top: 40px; padding: 24px 32px;
+    background-color: var(--forest); border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .cta-section h2 em { font-style: italic; color: var(--green); }
-  .cta-section p { font-size: 16px; color: var(--muted); max-width: 480px; margin: 0 auto 40px; position: relative; }
-  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
-  .btn-primary {
-    background: var(--green);
-    color: var(--ink);
-    padding: 16px 36px;
-    border-radius: 8px;
-    font-size: 14px; font-weight: 600; letter-spacing: .5px;
-    text-decoration: none;
-    display: inline-block;
-    transition: background .2s, transform .15s;
+  .sends-total-text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .sends-total-text strong { color: var(--gold); }
+  .sends-total-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 48px; font-weight: 900; color: var(--gold); line-height: 1;
   }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--white);
-    border: 1px solid rgba(255,255,255,.2);
-    padding: 16px 36px;
-    border-radius: 8px;
-    font-size: 14px; font-weight: 400; letter-spacing: .5px;
-    text-decoration: none;
-    display: inline-block;
-    transition: border-color .2s, transform .15s;
-  }
-  .btn-ghost:hover { border-color: var(--green); color: var(--green); transform: translateY(-2px); }
+  .sends-total-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); text-align: right; }
 
   /* ── FOOTER ── */
   footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 40px;
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 960px; margin: 0 auto;
-    font-size: 12px; color: var(--muted);
+    padding: 48px 52px; display: flex; justify-content: space-between; align-items: center;
+    background-color: var(--forest-dk); border-top: 1px solid rgba(200,217,196,0.12);
   }
-  @media(max-width:640px){ footer { flex-direction: column; gap: 12px; text-align: center; } }
-  footer a { color: var(--green); text-decoration: none; }
+  .footer-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 0.16em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+  .footer-logo span { color: var(--gold); }
+  .footer-note { font-size: 12px; color: rgba(255,255,255,0.2); }
+  .footer-contact { font-size: 13px; color: rgba(255,255,255,0.4); text-align: right; }
+  .footer-contact a { color: var(--gold); text-decoration: none; }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: .5; transform: scale(.8); }
-  }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── SCROLL REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
-  .reveal.in { opacity: 1; transform: translateY(0); }
-
-  /* ── HIGHLIGHT BOX ── */
-  .hl {
-    background: rgba(60,181,74,.07);
-    border-left: 3px solid var(--green);
-    border-radius: 0 8px 8px 0;
-    padding: 16px 20px;
-    font-size: 14px; color: rgba(255,255,255,.75);
-    line-height: 1.65;
-    margin-bottom: 16px;
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-badge { display: none; }
+    .nav-tab-btn { padding: 0 14px; font-size: 11px; }
+    section { padding: 60px 20px; }
+    .hero { padding: 120px 20px 60px; }
+    .hero-stats { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .hero-stat + .hero-stat { border-left: none; padding-left: 0; }
+    .hero-stat:nth-child(3) { border-top: 1px solid rgba(200,217,196,0.15); padding-top: 16px; }
+    .hero-stat:nth-child(4) { border-top: 1px solid rgba(200,217,196,0.15); padding-top: 16px; }
+    .opp-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+    .design-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .flows-grid-lc { grid-template-columns: 1fr; }
+    .flows-grid-lc.two-col { grid-template-columns: 1fr; }
+    .flows-grid-lc.four-col { grid-template-columns: 1fr; }
+    .lc-flow-card.featured { grid-column: span 1; }
+    .segments-grid { grid-template-columns: 1fr 1fr; }
+    .send-row { grid-template-columns: 40px 80px 1fr; gap: 8px; padding: 12px 14px; }
+    .send-segs { display: none; }
+    .platinum-wrap { flex-direction: column; gap: 20px; padding: 32px; }
+    .sends-total { flex-direction: column; gap: 16px; text-align: center; }
+    .sends-total-label { text-align: center; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-contact { text-align: center; }
+    .lifecycles-header, .campaigns-header { padding: 96px 20px 56px; }
+    .lifecycles-body, .campaigns-body { padding: 48px 20px; }
   }
 </style>
 </head>
 <body>
 
 <!-- PASSWORD GATE -->
-<div id="gate">
-  <div class="gate-bg"></div>
-  <div class="gate-grid"></div>
-  <div class="gate-box">
-    <div class="gate-logo-wrap">
-      <div class="gate-logo-mark">D</div>
-      <div class="gate-x">×</div>
-      <div class="gate-logo-mark lg">L</div>
-    </div>
-    <div class="gate-brand">DigitsUp × LiveGood</div>
-    <div class="gate-sub">Klaviyo Retention Proposal · Confidential</div>
-    <div class="gate-line"></div>
-    <div class="gate-label">Enter Access Code</div>
-    <input id="gate-input" class="gate-input" type="password" placeholder="· · · · · · ·" autocomplete="off" />
-    <button class="gate-btn" onclick="checkPass()">
-      <span class="btn-text">Unlock Proposal</span>
-      <span class="btn-arrow">→</span>
-    </button>
-    <div class="gate-error" id="gate-err"></div>
-    <div class="gate-footer">Prepared by DigitsUp LLC · Klaviyo Platinum Partner</div>
+<div id="password-gate" style="
+  position:fixed; inset:0; z-index:9999;
+  background-color:#122A1E;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:32px;
+  padding:40px;
+">
+  <div style="background-image:radial-gradient(rgba(212,160,23,0.1) 1.5px,transparent 1.5px);background-size:28px 28px;position:absolute;inset:0;pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(212,160,23,0.1) 0%,transparent 70%);"></div>
+  <div style="position:relative;z-index:2;text-align:center;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:56px;letter-spacing:-0.01em;color:#FFFFFF;text-transform:uppercase;line-height:1;margin-bottom:8px;">LIVE<span style="color:#E8671A">G</span><span style="color:#E8671A">oo</span>D</div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.22em;color:rgba(212,160,23,0.6);text-transform:uppercase;margin-top:8px;">Email & SMS Retention · DigitsUp</div>
+  </div>
+  <div style="position:relative;z-index:2;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;">
+    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off"
+      onkeydown="if(event.key==='Enter')checkPassword()"
+      style="width:100%;padding:16px 20px;background-color:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;outline:none;font-family:'Nunito Sans',sans-serif;font-size:16px;font-weight:600;color:#FFFFFF;letter-spacing:0.12em;text-align:center;"/>
+    <button onclick="checkPassword()" style="width:100%;padding:16px;background-color:#D4A017;border:none;border-radius:10px;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;color:#1A3A2A;text-transform:uppercase;cursor:pointer;">View Proposal</button>
+    <div id="pw-error" style="font-size:13px;font-weight:600;color:#FF6B6B;text-align:center;opacity:0;transition:opacity 0.3s;min-height:20px;">Incorrect password — try again.</div>
   </div>
 </div>
 
 <!-- MAIN CONTENT -->
-<div id="main"
+<div id="main-content" style="display:none;">
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-logo">DigitsUp × LiveGood</div>
-    <ul class="nav-links">
-      <li><a href="#opportunity">Opportunity</a></li>
-      <li><a href="#automations">Automations</a></li>
-      <li><a href="#campaigns">Campaigns</a></li>
-      <li><a href="#roadmap">Roadmap</a></li>
-      <li><a href="#pricing">Investment</a></li>
-    </ul>
-  </nav>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <span class="nav-livegood">LIVE<span class="oo">G<span style="color:#E8671A">oo</span></span>D</span>
+    <div class="nav-sep"></div>
+    <span class="nav-digits">DigitsUp</span>
+  </div>
+  <ul class="nav-tabs">
+    <li><button class="nav-tab-btn active" onclick="switchTab('proposal', this)">Proposal</button></li>
+    <li><button class="nav-tab-btn" onclick="switchTab('lifecycles', this)">Lifecycles</button></li>
+    <li><button class="nav-tab-btn" onclick="switchTab('campaigns', this)">Campaigns</button></li>
+  </ul>
+  <span class="nav-badge">Klaviyo Platinum Partner</span>
+</nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid"></div>
+<!-- ════════════════════════════════════════════════
+     TAB 1: PROPOSAL
+════════════════════════════════════════════════ -->
+<div id="tab-proposal" class="tab-section active">
 
-    <div class="hero-pill"><div class="pill-dot"></div>Klaviyo Platinum Partner</div>
-
-    <h1>More Revenue<br>from the List<br><em>You Already Have.</em></h1>
-    <div class="hero-by">Prepared for LiveGood &nbsp;·&nbsp; DigitsUp LLC &nbsp;·&nbsp; 2026</div>
-
-    <p class="hero-desc">A 90-day engagement to build, activate, and scale LiveGood's full email and SMS retention engine — from abandoned flows to loyalty reactivation.</p>
-
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <span class="val">90</span>
-        <span class="lbl">Day Engagement</span>
-      </div>
-      <div class="hero-stat">
-        <span class="val">8</span>
-        <span class="lbl">Automations Built</span>
-      </div>
-      <div class="hero-stat">
-        <span class="val">1–5×</span>
-        <span class="lbl">Campaigns / Week</span>
-      </div>
-      <div class="hero-stat">
-        <span class="val">11+</span>
-        <span class="lbl">Years Experience</span>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-ambient">
+    <div class="amb amb-1"></div>
+    <div class="amb amb-2"></div>
+    <div class="amb amb-3"></div>
+  </div>
+  <div class="hero-eyebrow">Email &amp; SMS Retention · May 2026</div>
+  <h1 class="hero-title">More<br>Revenue<br>From the<br><em>List You</em><br>Already<br>Have.</h1>
+  <p class="hero-sub">Prepared for LiveGood · DigitsUp LLC · 2026</p>
+  <p class="hero-intro">
+    LiveGood has 1M+ subscribers and $3M in monthly revenue — and less than 10% of it is coming from email. That's not a gap. That's an opportunity. <strong>A 90-day retention build with DigitsUp activates the full value of what you've already earned.</strong>
+  </p>
+  <div class="hero-pills">
+    <span class="hero-pill">Lifecycle Automations</span>
+    <span class="hero-pill">Campaign Strategy</span>
+    <span class="hero-pill">SMS Activation</span>
+    <span class="hero-pill outline">Email + SMS</span>
+    <span class="hero-pill outline">Full Service</span>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">90 Day</div>
+      <div class="hero-stat-label">Engagement Build</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">9</div>
+      <div class="hero-stat-label">Flows Built</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">4×</div>
+      <div class="hero-stat-label">Campaigns/Week</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">11+</div>
+      <div class="hero-stat-label">Years Experience</div>
     </div>
   </div>
+</section>
 
-  <div class="divider"></div>
+<!-- THE OPPORTUNITY -->
+<section class="opportunity-section">
+  <div class="eyebrow-dark">The Opportunity</div>
+  <h2 class="title-on-dark">LiveGood Has the Audience.<br><em>Now Let's Monetize It.</em></h2>
+  <div class="opp-grid reveal">
+    <div class="opp-card">
+      <div class="opp-title">Email Is Doing Less Than 10% of the Work</div>
+      <div class="opp-desc">Industry average for a healthy DTC email program is 20–30% of revenue. At $3M/month, that's $600K–$900K in reachable email revenue. Right now, LiveGood is leaving $400K+ on the table every single month.</div>
+    </div>
+    <div class="opp-card">
+      <div class="opp-title">Ads Are Paused. Email Is the Only Channel.</div>
+      <div class="opp-desc">With the website redesign underway and paid media on hold, email is the only revenue engine running. The next 30 days are critical — and we're ready to build while the window is open.</div>
+    </div>
+    <div class="opp-card">
+      <div class="opp-title">The Membership Conversion Gap</div>
+      <div class="opp-desc">Non-member buyers are paying more and churning faster. A structured post-purchase flow that pitches membership at exactly the right moment — when the math is personal — turns one-time buyers into high-LTV members.</div>
+    </div>
+  </div>
+</section>
 
-  <!-- OPPORTUNITY -->
-  <section id="opportunity">
-    <div class="section-label reveal">The Opportunity</div>
-    <h2 class="section-h reveal">LiveGood Has the Audience.<br><em>Now Let's Monetize It.</em></h2>
-    <p class="section-intro reveal">LiveGood's model is built around a passionate, health-driven community with high repeat purchase potential. Most of that lifetime value is sitting dormant in the list — recoverable through the right automation architecture and a consistent campaign cadence.</p>
+<!-- WHY DIGITSUP -->
+<section class="why-section">
+  <div class="eyebrow-light">Why DigitsUp</div>
+  <h2 class="title-on-light">Built for<br><em>Brands Like This.</em></h2>
+  <p class="body-lg-light reveal">Full service. End to end. You see results, not work.</p>
+  <div class="why-grid reveal" style="transition-delay:0.1s">
+    <div class="why-card">
+      <div class="why-num">Approach</div>
+      <div class="why-title">Full Service, End to End</div>
+      <div class="why-desc">Strategy, design, copywriting, Klaviyo build, QA, send, and reporting. You don't touch it. You review it and approve it. That's the whole model.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">Platform</div>
+      <div class="why-title">Built for Klaviyo</div>
+      <div class="why-desc">Klaviyo Platinum Partner with 11+ years and 45+ brands scaled. We know the platform at every level — flows, segments, A/B tests, deliverability, reporting.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">Creative</div>
+      <div class="why-title">Design That Matches the Brand</div>
+      <div class="why-desc">Every email built on LiveGood's visual identity — forest green, gold, premium product photography, benefit-led copy. Not a template. A brand-built content system.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">Execution</div>
+      <div class="why-title">Campaign Calendar Ownership</div>
+      <div class="why-desc">Monthly calendar approved by the 25th. Every send planned, segmented, built, and reported. You see results, not work.</div>
+    </div>
+  </div>
+  <div class="platinum-wrap reveal" style="transition-delay:0.2s">
+    <div class="platinum-icon">🏆</div>
+    <div>
+      <div class="platinum-label">DigitsUp Agency</div>
+      <div class="platinum-title">Klaviyo Platinum Partner</div>
+      <div class="platinum-desc">Klaviyo Platinum Partner — awarded to agencies in the top tier of Klaviyo expertise globally. Less than 1% of agencies hold Platinum status. We hold it because our clients see returns that make it defensible every quarter.</div>
+    </div>
+  </div>
+</section>
 
-    <div class="opp-grid">
-      <div class="opp-card reveal">
-        <div class="opp-num">01</div>
-        <h3>Abandoned Revenue Recovery</h3>
-        <p>Cart, checkout, and browse abandonment are the highest-ROI flows in retention. Without a complete abandonment suite, LiveGood is leaving meaningful first-party revenue on the table every single day.</p>
+<!-- EMAIL DESIGN EXAMPLES -->
+<section class="design-section">
+  <div class="eyebrow-light">Email Creative</div>
+  <h2 class="title-on-light">Design Built<br><em>for LiveGood.</em></h2>
+  <p class="body-lg-light reveal">These are examples of the email template system we design for LiveGood — custom creative built around your product catalog, visual identity, and benefit-led copy. Four category variants, one modular system. Marl's final designs arrive Sunday.</p>
+  <div class="design-grid reveal" style="transition-delay:0.1s">
+
+    <div class="design-card">
+      <div class="design-card-header">
+        <span class="design-card-badge">Focus &amp; Mental Clarity</span>
+        <div class="design-card-dots"><span></span><span></span><span></span></div>
       </div>
-      <div class="opp-card reveal">
-        <div class="opp-num">02</div>
-        <h3>Welcome Experience & First Purchase</h3>
-        <p>The popup subscriber who never converts is a common leak point. A segmented welcome series — built around LiveGood's product categories and health goals — drives that first purchase before interest fades.</p>
-      </div>
-      <div class="opp-card reveal">
-        <div class="opp-num">03</div>
-        <h3>Post-Purchase LTV Expansion</h3>
-        <p>LiveGood's catalog is deep — vitamins, CBD, greens, protein, skincare, bundles. A structured post-purchase flow cross-sells related products, educates on benefits, and builds the habit loop that drives subscription and repeat orders.</p>
-      </div>
-      <div class="opp-card reveal">
-        <div class="opp-num">04</div>
-        <h3>Win-Back & Sunset</h3>
-        <p>Lapsed members and dormant subscribers are high-intent when re-engaged correctly. A proper winback sequence — with a sunset to protect deliverability — keeps the list clean and the engaged segment growing.</p>
+      <div class="design-card-body">
+        <div class="design-card-title">Welcome Email Variation — Focus &amp; Mental Clarity</div>
+        <div class="design-card-thumb"><div class="design-card-thumb-icon">🧠</div></div>
+        <div class="design-card-coming">Design Preview Coming Sunday</div>
+        <div class="design-card-note">Goal-personalized welcome — product stack curated for focus &amp; cognitive performance.</div>
       </div>
     </div>
-  </section>
 
-  <div class="divider"></div>
-
-  <!-- AUTOMATIONS -->
-  <section id="automations">
-    <div class="section-label reveal">Automation Suite</div>
-    <h2 class="section-h reveal">8 Flows. <em>All Signal,</em><br>No Waste.</h2>
-    <p class="section-intro reveal">Every automation below is built to fire at exactly the right moment, with logic designed for LiveGood's membership model, product catalog depth, and health-conscious customer base.</p>
-
-    <div class="flows-list">
-
-      <div class="flow-row reveal" style="animation-delay:.05s">
-        <div class="flow-name">Browse Abandonment<span>Triggered: product page view, no add-to-cart</span></div>
-        <div class="flow-desc">Re-engages browsers before intent cools. Copy leans on the specific product viewed — ingredient callouts, benefits, member pricing advantage. 2–3 emails over 48 hours.</div>
-        <div class="flow-badge badge-priority">Phase 1</div>
+    <div class="design-card">
+      <div class="design-card-header">
+        <span class="design-card-badge">Sleep &amp; Recovery</span>
+        <div class="design-card-dots"><span></span><span></span><span></span></div>
       </div>
-
-      <div class="flow-row reveal" style="animation-delay:.1s">
-        <div class="flow-name">Cart Abandonment<span>Triggered: add-to-cart, no checkout initiated</span></div>
-        <div class="flow-desc">The workhorse recovery flow. 3-touch sequence with a product reminder, social proof or ingredient deep-dive, and a soft incentive on touch 3 if still unconverted.</div>
-        <div class="flow-badge badge-priority">Phase 1</div>
+      <div class="design-card-body">
+        <div class="design-card-title">Welcome Email Variation — Sleep &amp; Recovery</div>
+        <div class="design-card-thumb"><div class="design-card-thumb-icon">🌙</div></div>
+        <div class="design-card-coming">Design Preview Coming Sunday</div>
+        <div class="design-card-note">Calm, restorative tone — products matched to sleep and overnight recovery goals.</div>
       </div>
-
-      <div class="flow-row reveal" style="animation-delay:.15s">
-        <div class="flow-name">Checkout Abandonment<span>Triggered: checkout started, no purchase</span></div>
-        <div class="flow-desc">Highest-converting abandonment flow — these buyers got furthest down the funnel. 2-email sequence, urgency-forward, reinforcing the member value proposition and 60-day guarantee.</div>
-        <div class="flow-badge badge-priority">Phase 1</div>
-      </div>
-
-      <div class="flow-row reveal" style="animation-delay:.2s">
-        <div class="flow-name">Welcome Series<span>Triggered: popup subscribe, no prior purchase</span></div>
-        <div class="flow-desc">A brand-first, product-second welcome that earns trust before it asks for a sale. Introduces LiveGood's mission, member pricing advantage, and top-selling product categories. 4–5 emails over 10 days, with purchase behavior exits.</div>
-        <div class="flow-badge badge-priority">Phase 1</div>
-      </div>
-
-      <div class="flow-row reveal" style="animation-delay:.25s">
-        <div class="flow-name">Post-Purchase — New Customer<span>Triggered: first-ever order placed</span></div>
-        <div class="flow-desc">Celebrates the first purchase, confirms member status, and begins planting the seeds for order #2. Usage tips, complement products, a membership upgrade prompt if not already a member.</div>
-        <div class="flow-badge badge-priority">Phase 1</div>
-      </div>
-
-      <div class="flow-row reveal" style="animation-delay:.3s">
-        <div class="flow-name">Post-Purchase — Repeat Customer<span>Triggered: 2nd purchase onward</span></div>
-        <div class="flow-desc">Deepens the relationship. Recognizes loyalty, introduces adjacent catalog products based on what they've bought, reinforces the subscription/auto-ship value with a direct nudge.</div>
-        <div class="flow-badge badge-phase2">Phase 2</div>
-      </div>
-
-      <div class="flow-row reveal" style="animation-delay:.35s">
-        <div class="flow-name">Win-Back<span>Triggered: no purchase in 90–120 days</span></div>
-        <div class="flow-desc">Reactivates lapsed customers with a compelling re-engagement sequence. Product re-introduction, "what's new," and a timed offer. 3 emails with an SMS touchpoint on the final send.</div>
-        <div class="flow-badge badge-phase2">Phase 2</div>
-      </div>
-
-      <div class="flow-row reveal" style="animation-delay:.4s">
-        <div class="flow-name">Sunset<span>Triggered: no engagement in 180+ days</span></div>
-        <div class="flow-desc">A clean, honest last-chance flow that either re-activates or suppresses — keeping the list healthy and deliverability protected. One final offer, then a graceful exit from the active list.</div>
-        <div class="flow-badge badge-phase2">Phase 2</div>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- CAMPAIGNS -->
-  <section id="campaigns">
-    <div class="section-label reveal">Campaign Strategy</div>
-    <h2 class="section-h reveal">Consistent Sends.<br><em>Smarter Segmentation.</em></h2>
-    <p class="section-intro reveal">Two service tiers designed to match LiveGood's growth stage and ambitions. Every campaign is segmented, scheduled, and built with LiveGood's health-product catalog and member audience at the center.</p>
-
-    <div class="tier-grid">
-
-      <div class="tier-card t1 reveal">
-        <div class="tier-eyebrow">Tier 1 / Foundation</div>
-        <h3>1–2 Campaigns / Week</h3>
-        <div class="tier-rate">4–8 <span>/ month</span></div>
-        <p>The right baseline — consistent sends to a clean, segmented list. Every campaign splits at minimum between new and return customer audiences.</p>
-        <ul class="tier-features">
-          <li>New vs. return customer split on every send</li>
-          <li>Engagement-tiered suppression built in</li>
-          <li>Monthly campaign calendar approved by 25th</li>
-          <li>Subject line + preview text for every send</li>
-          <li>Monthly performance report</li>
-        </ul>
-      </div>
-
-      <div class="tier-card t2 reveal">
-        <div class="tier-eyebrow">Tier 2 / Growth</div>
-        <h3>3–5 Campaigns / Week</h3>
-        <div class="tier-rate">12–20 <span>/ month</span></div>
-        <p>For brands ready to scale. Higher send frequency with full segmented split testing across audience cohorts, product lines, and engagement tiers.</p>
-        <ul class="tier-features">
-          <li>Everything in Tier 1</li>
-          <li>3–5 targeted segments per send (health goal, product line, purchase history)</li>
-          <li>A/B testing on subject lines, CTAs, and send times</li>
-          <li>SMS campaign sends alongside email cadence</li>
-          <li>Bi-weekly strategy check-in calls</li>
-          <li>Engagement re-warming sequences between major sends</li>
-        </ul>
-      </div>
-
     </div>
 
-    <div class="hl reveal">
-      <strong>Segmentation philosophy:</strong> LiveGood's catalog spans vastly different health categories — weight management, brain health, immune support, skincare, and more. We treat these as separate content universes. Subscribers who've bought greens and reds get a different send from someone who opened the Methylene Blue or CBD products. Purchase history drives the split; engagement data drives the timing.
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- ROADMAP -->
-  <section id="roadmap">
-    <div class="section-label reveal">90-Day Roadmap</div>
-    <h2 class="section-h reveal">Built to <em>Generate Revenue</em><br>in Week One.</h2>
-    <p class="section-intro reveal">Three distinct phases — foundation, activation, and scale — each building on the last. By Day 90, LiveGood has a fully operational retention engine running without manual intervention.</p>
-
-    <div class="roadmap">
-
-      <div class="phase reveal">
-        <div class="phase-num">01</div>
-        <div class="phase-content">
-          <div class="phase-tag">Days 1–30 · Foundation</div>
-          <h3>Klaviyo Audit, Architecture & Phase 1 Flows Live</h3>
-          <div class="phase-items">
-            <div class="phase-item">Full Klaviyo account audit — flows, lists, segments, deliverability</div>
-            <div class="phase-item">Attribution audit — Klaviyo vs. Shopify vs. GA reconciled</div>
-            <div class="phase-item">Suppression lists and engagement tiers built from day one</div>
-            <div class="phase-item">Abandoned cart, checkout, and browse flows built and live</div>
-            <div class="phase-item">Welcome series built and live — popup trigger confirmed</div>
-            <div class="phase-item">Post-purchase (new customer) flow built and live</div>
-            <div class="phase-item">Campaign calendar for Month 1 approved and first sends launched</div>
-          </div>
-        </div>
+    <div class="design-card">
+      <div class="design-card-header">
+        <span class="design-card-badge">Energy &amp; Daily Wellness</span>
+        <div class="design-card-dots"><span></span><span></span><span></span></div>
       </div>
-
-      <div class="phase reveal">
-        <div class="phase-num">02</div>
-        <div class="phase-content">
-          <div class="phase-tag">Days 31–60 · Activation</div>
-          <h3>Phase 2 Flows, Segmentation Depth & Optimization</h3>
-          <div class="phase-items">
-            <div class="phase-item">Post-purchase (repeat customer) flow live</div>
-            <div class="phase-item">Win-back and sunset flows built and live</div>
-            <div class="phase-item">SMS flows layered into abandonment and win-back sequences</div>
-            <div class="phase-item">Full segmentation matrix live: product line, health goal, engagement tier, purchase recency</div>
-            <div class="phase-item">Phase 1 flow performance reviewed — optimization round 1 completed</div>
-            <div class="phase-item">Month 1 performance report delivered</div>
-          </div>
-        </div>
+      <div class="design-card-body">
+        <div class="design-card-title">Welcome Email Variation — Energy &amp; Daily Wellness</div>
+        <div class="design-card-thumb"><div class="design-card-thumb-icon">⚡</div></div>
+        <div class="design-card-coming">Design Preview Coming Sunday</div>
+        <div class="design-card-note">High energy, vibrant — daily essentials and foundational wellness stack.</div>
       </div>
-
-      <div class="phase reveal">
-        <div class="phase-num">03</div>
-        <div class="phase-content">
-          <div class="phase-tag">Days 61–90 · Scale</div>
-          <h3>Full Engine Running — Test, Learn, Compound</h3>
-          <div class="phase-items">
-            <div class="phase-item">A/B testing running across top-performing flows and campaign sequences</div>
-            <div class="phase-item">Segment performance analysis — identifying highest-value cohorts</div>
-            <div class="phase-item">Full system optimization: timing, frequency, cadence, suppression</div>
-            <div class="phase-item">Month 2 performance report delivered</div>
-            <div class="phase-item">90-day retrospective + renewal scope delivered by Day 85</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- PRICING -->
-  <section id="pricing">
-    <div class="section-label reveal">Investment</div>
-    <h2 class="section-h reveal">Transparent Pricing.<br><em>No Setup Fee.</em></h2>
-    <p class="section-intro reveal">A fixed monthly retainer covers everything — flows, campaigns, segmentation, reporting, and strategy. No per-send fees, no surprises.</p>
-
-    <div class="pricing-wrap">
-
-      <div class="price-card reveal">
-        <div class="price-name">Tier 1</div>
-        <div class="price-tier">Foundation</div>
-        <div class="price-val"><sup>$</sup>5,250<sub>/mo</sub></div>
-        <div class="price-note">$15,750 total &nbsp;·&nbsp; 90-day engagement</div>
-        <ul class="price-items">
-          <li>All 8 automations built & managed</li>
-          <li>1–2 campaigns / week (~4–8/month)</li>
-          <li>New vs. return segmentation on every send</li>
-          <li>Monthly performance report + strategy call</li>
-          <li>No setup fee</li>
-          <li>30-day cancellation after Day 30</li>
-        </ul>
-      </div>
-
-      <div class="price-card featured reveal">
-        <div class="price-name">Tier 2</div>
-        <div class="price-tier">Growth</div>
-        <div class="price-val"><sup>$</sup>8,750<sub>/mo</sub></div>
-        <div class="price-note">$26,250 total &nbsp;·&nbsp; 90-day engagement</div>
-        <ul class="price-items">
-          <li>Everything in Tier 1</li>
-          <li>3–5 campaigns / week (12–20/month)</li>
-          <li>Full segmented split per send (3–5 segments)</li>
-          <li>A/B testing on all major sends</li>
-          <li>SMS campaign sends included</li>
-          <li>Bi-weekly strategy calls</li>
-          <li>Priority turnaround on all deliverables</li>
-        </ul>
-      </div>
-
     </div>
 
-    <div class="guarantee reveal">
-      <div class="g-icon">🛡️</div>
+    <div class="design-card">
+      <div class="design-card-header">
+        <span class="design-card-badge">Performance &amp; Body</span>
+        <div class="design-card-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="design-card-body">
+        <div class="design-card-title">Welcome Email Variation — Performance &amp; Body</div>
+        <div class="design-card-thumb"><div class="design-card-thumb-icon">💪</div></div>
+        <div class="design-card-coming">Design Preview Coming Sunday</div>
+        <div class="design-card-note">Bold, results-driven — muscle, performance, and body composition products front and center.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="eyebrow-dark">Investment</div>
+  <h2 class="title-on-dark"><em>The Investment.</em></h2>
+  <p class="body-lg-dark reveal">Two tiers. Both full service. The difference is volume, velocity, and depth of segmentation.</p>
+  <div class="pricing-grid reveal" style="transition-delay:0.1s">
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Tier 1</div>
+      <div class="pricing-name">Foundation</div>
+      <div class="pricing-amount">$X,XXX <span>/ month</span></div>
+      <hr class="pricing-divider">
+      <ul class="pricing-features">
+        <li>1–2 Campaigns / Week (4–8/month)</li>
+        <li>Full lifecycle automation suite — Phase 1, 5 flows</li>
+        <li>Campaign strategy, copy, design, build, send</li>
+        <li>Monthly performance report</li>
+        <li>Klaviyo account management</li>
+      </ul>
+    </div>
+
+    <div class="pricing-card recommended">
+      <div class="pricing-recommended-badge">Recommended</div>
+      <div class="pricing-tier">Tier 2</div>
+      <div class="pricing-name">Growth</div>
+      <div class="pricing-amount">$X,XXX <span>/ month</span></div>
+      <hr class="pricing-divider">
+      <ul class="pricing-features">
+        <li>3–5 Campaigns / Week (12–20/month)</li>
+        <li>Full lifecycle automation suite — all 9 flows, Phase 1 + 2</li>
+        <li>Advanced segmentation: member vs. non-member, goal cluster, purchase history</li>
+        <li>SMS campaign cadence alongside email</li>
+        <li>A/B testing on subject lines, CTAs, send times</li>
+        <li>Monthly performance report + strategy session</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing-section">
+  <div class="eyebrow-dark">Next Steps</div>
+  <h2 class="title-on-dark"><em>Let's Build This.</em></h2>
+  <div class="steps-grid reveal" style="transition-delay:0.1s">
+    <div class="step-card">
+      <div class="step-n">01</div>
+      <div class="step-title">Scope Call</div>
+      <div class="step-desc">30 minutes. We align on priorities, confirm Klaviyo access, and set the build order for Phase 1.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-n">02</div>
+      <div class="step-title">Phase 1 Build</div>
+      <div class="step-desc">Welcome series, abandonment suite, and post-purchase flows live within 3 weeks. Campaign calendar starts Week 1.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-n">03</div>
+      <div class="step-title">Results Review</div>
+      <div class="step-desc">30-day check-in. Revenue attributed, open rates, conversion rates, what's working, what we're optimizing.</div>
+    </div>
+  </div>
+  <div style="margin-top:48px;text-align:center;position:relative;z-index:1;">
+    <a href="mailto:mike@digitsup.com" style="display:inline-block;padding:18px 48px;background-color:#D4A017;border-radius:10px;font-family:'Nunito Sans',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;color:#1A3A2A;text-transform:uppercase;text-decoration:none;">Start the Conversation</a>
+    <div style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.3);">mike@digitsup.com</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Digits<span>Up</span> — Klaviyo Platinum Partner</div>
+  <div class="footer-note">Prepared for LiveGood · May 2026</div>
+  <div class="footer-contact"><a href="mailto:mike@digitsup.com">mike@digitsup.com</a></div>
+</footer>
+
+</div><!-- /tab-proposal -->
+
+
+<!-- ════════════════════════════════════════════════
+     TAB 2: LIFECYCLES
+════════════════════════════════════════════════ -->
+<div id="tab-lifecycles" class="tab-section">
+
+<div class="lifecycles-header">
+  <div class="eyebrow-dark">Automation Architecture</div>
+  <h2 class="title-on-dark">9 Flows. Every Stage<br><em>of the Customer Journey.</em></h2>
+  <p class="body-lg-dark" style="margin-top:0;">This is the full retention engine — from the moment someone subscribes to the moment they become a long-term member. Every flow is built for LiveGood's catalog, membership model, and health-driven audience.</p>
+</div>
+
+<div class="lifecycles-body">
+
+  <!-- STAGE 1: ACQUIRE -->
+  <div class="stage-block reveal">
+    <div class="stage-header">
+      <span class="stage-badge">Stage 1</span>
       <div>
-        <h3>Our Commitment to Results</h3>
-        <p>We operate as an extension of your team — not a vendor. Every flow built is built to your brand, your catalog, and your customer base. If Phase 1 flows aren't live within 30 days of receiving access and assets, we extend the engagement at no cost. No ambiguity on deliverables. No hidden add-ons.</p>
+        <div class="stage-name">Acquire</div>
+        <div class="stage-sub">New Subscribers</div>
       </div>
     </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- WHY DIGITSUP -->
-  <section id="why">
-    <div class="section-label reveal">Why DigitsUp</div>
-    <h2 class="section-h reveal">Klaviyo Platinum Partner.<br><em>11+ Years of Retention.</em></h2>
-    <p class="section-intro reveal">We work exclusively with DTC and ecommerce brands. That focus means faster setup, better creative, and a team that already knows what works for a health-product catalog like LiveGood's.</p>
-
-    <div class="why-grid">
-      <div class="why-card reveal">
-        <span class="why-icon">🏆</span>
-        <h4>Klaviyo Platinum Partner</h4>
-        <p>Platinum-tier designation means Klaviyo has vetted our work, our results, and our processes. We get early access to features and dedicated Klaviyo support for your account.</p>
+    <div class="flows-grid-lc">
+      <div class="lc-flow-card" style="grid-column: span 3;">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-sms">SMS ✓</span>
+          <span class="lc-badge lc-badge-count">4 emails per variant</span>
+        </div>
+        <div class="lc-flow-name">Welcome Series</div>
+        <div class="lc-flow-trigger">Popup subscribe — goal selection captured from form</div>
+        <div class="lc-flow-theme">"Get the first purchase. Don't pitch membership yet — that comes after they buy."</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:10px;">4 Goal-Based Variants</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);"><span style="font-size:16px;">🧠</span> Focus &amp; Mental Clarity</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);"><span style="font-size:16px;">🌙</span> Sleep &amp; Recovery</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);"><span style="font-size:16px;">⚡</span> Energy &amp; Daily Wellness</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-mid);"><span style="font-size:16px;">💪</span> Performance &amp; Body</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:10px;">Email Breakdown</div>
+            <div class="lc-steps">
+              <div class="lc-step"><div class="lc-step-n">1</div>Goal-personalized product stack + 10% off claim</div>
+              <div class="lc-step"><div class="lc-step-n">2</div>Brand story — "highest quality, wholesale price, here's why"</div>
+              <div class="lc-step"><div class="lc-step-n">3</div>Best sellers in your goal category + social proof</div>
+              <div class="lc-step"><div class="lc-step-n">4</div>Last chance 10% off + urgency · SMS fires if no purchase</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="why-card reveal">
-        <span class="why-icon">⚡</span>
-        <h4>Flows Live in Week One</h4>
-        <p>No 6-week ramp. Cart, checkout, and browse abandonment flows are prioritized first so revenue recovery starts before Month 1 is over.</p>
-      </div>
-      <div class="why-card reveal">
-        <span class="why-icon">📊</span>
-        <h4>Revenue-First Reporting</h4>
-        <p>Every report ties back to dollars — flow-attributed revenue, campaign revenue per recipient, and list health metrics that tell you what the next move is.</p>
-      </div>
-      <div class="why-card reveal">
-        <span class="why-icon">🧬</span>
-        <h4>Health Brand Fluency</h4>
-        <p>We understand supplement, wellness, and health product copywriting — benefit-led, claim-compliant, and customer-trust-forward. No generic "we've got a deal for you" campaigns.</p>
-      </div>
-      <div class="why-card reveal">
-        <span class="why-icon">🔁</span>
-        <h4>Retention Systems, Not One-Offs</h4>
-        <p>We build architecture that compounds. The flows, segments, and campaign logic we build in Month 1 get smarter in Month 3 — because everything is connected and tracked.</p>
-      </div>
-      <div class="why-card reveal">
-        <span class="why-icon">🤝</span>
-        <h4>A Real Team, Not a Solopreneur</h4>
-        <p>Strategy, copy, design, and QA are handled by a dedicated team — not outsourced on a per-project basis. You get consistent execution and a single point of contact.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <div class="cta-section">
-    <div class="cta-bg"></div>
-    <h2>Ready to Build<br><em>the Engine?</em></h2>
-    <p>Let's align on scope, confirm access, and have flows live within the first 30 days.</p>
-    <div class="cta-buttons">
-      <a href="mailto:michael@digitsup.com?subject=LiveGood%20Proposal%20%E2%80%94%20Let%27s%20Move%20Forward" class="btn-primary">Accept &amp; Move Forward</a>
-      <a href="mailto:michael@digitsup.com?subject=LiveGood%20Proposal%20%E2%80%94%20Question" class="btn-ghost">Ask a Question</a>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div>© 2026 DigitsUp LLC &nbsp;·&nbsp; Klaviyo Platinum Partner &nbsp;·&nbsp; Confidential</div>
-    <div><a href="mailto:michael@digitsup.com">michael@digitsup.com</a></div>
-  </footer>
+  <div class="stage-connector reveal">Stage 2</div>
 
-</div><!-- /main -->
+  <!-- STAGE 2: RECOVER -->
+  <div class="stage-block reveal">
+    <div class="stage-header">
+      <span class="stage-badge">Stage 2</span>
+      <div>
+        <div class="stage-name">Recover</div>
+        <div class="stage-sub">Abandonment Recovery</div>
+      </div>
+    </div>
+    <div class="flows-grid-lc">
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-count">2 emails</span>
+        </div>
+        <div class="lc-flow-name">Browse Abandonment</div>
+        <div class="lc-flow-trigger">Product page view · no add to cart</div>
+        <div class="lc-flow-theme">"Re-engage before intent cools. Lead with the product they looked at."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div><strong>4hr:</strong> Specific product viewed — benefit-led, category-matched copy</div>
+          <div class="lc-step"><div class="lc-step-n">2</div><strong>24hr:</strong> Related products in the same goal cluster</div>
+        </div>
+      </div>
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-count">3 emails</span>
+        </div>
+        <div class="lc-flow-name">Cart Abandonment</div>
+        <div class="lc-flow-trigger">Add to cart · no checkout initiated</div>
+        <div class="lc-flow-theme">"The workhorse recovery flow. 3 touches, increasing value at each step."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div><strong>1hr:</strong> Product reminder + quick benefit recap</div>
+          <div class="lc-step"><div class="lc-step-n">2</div><strong>24hr:</strong> Ingredient deep-dive — why this product</div>
+          <div class="lc-step"><div class="lc-step-n">3</div><strong>48hr:</strong> Member pricing math — "members pay X less"</div>
+        </div>
+      </div>
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-sms">SMS ✓</span>
+          <span class="lc-badge lc-badge-count">2 emails</span>
+        </div>
+        <div class="lc-flow-name">Checkout Abandonment</div>
+        <div class="lc-flow-trigger">Checkout started · no purchase</div>
+        <div class="lc-flow-theme">"Highest-intent buyers. Urgency-forward. Reinforce the value proposition."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div><strong>1hr:</strong> "You were so close" — product + member price side by side</div>
+          <div class="lc-step"><div class="lc-step-n">2</div><strong>24hr:</strong> Trust signals — tested, guaranteed, ingredient transparency · SMS alongside</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="stage-connector reveal">Stage 3</div>
+
+  <!-- STAGE 3: EXPAND -->
+  <div class="stage-block reveal">
+    <div class="stage-header">
+      <span class="stage-badge">Stage 3</span>
+      <div>
+        <div class="stage-name">Expand</div>
+        <div class="stage-sub">Post-Purchase Growth</div>
+      </div>
+    </div>
+    <div class="flows-grid-lc two-col">
+
+      <div class="lc-flow-card featured">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-sms">SMS ✓</span>
+          <span class="lc-badge lc-badge-count">4 emails</span>
+        </div>
+        <div class="lc-flow-name">Post-Purchase — Non-Member</div>
+        <div class="lc-flow-trigger">First-ever order · no active membership</div>
+        <div class="lc-flow-theme">"Membership pitch AFTER purchase, when the savings math is personal. This is the highest-leverage non-member conversion moment."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div><strong>Immediate:</strong> Order confirmed, what to expect, build excitement</div>
+          <div class="lc-step"><div class="lc-step-n">2</div><strong>Day 3:</strong> Usage guide — build the habit, get the result · SMS reinforcement</div>
+          <div class="lc-step"><div class="lc-step-n">3</div><strong>Day 7:</strong> Membership pitch — "Here's what you saved. Here's what you left on the table. $9.95/month pays for itself on your next order."</div>
+          <div class="lc-step"><div class="lc-step-n">4</div><strong>Day 14:</strong> Cross-sell based on goal cluster (captured at signup)</div>
+        </div>
+      </div>
+
+      <div class="lc-flow-card" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:12px;flex:1;">
+          <div class="lc-flow-meta">
+            <span class="lc-badge lc-badge-p1">Phase 1</span>
+            <span class="lc-badge lc-badge-count">3 emails</span>
+          </div>
+          <div class="lc-flow-name">Post-Purchase — Member</div>
+          <div class="lc-flow-trigger">Purchase by active member (any order)</div>
+          <div class="lc-flow-theme">"VIP treatment. Expand the basket. Drive toward bundles and higher AOV."</div>
+          <div class="lc-steps">
+            <div class="lc-step"><div class="lc-step-n">1</div>Order confirmed + VIP member recognition</div>
+            <div class="lc-step"><div class="lc-step-n">2</div><strong>Day 5:</strong> Pack/bundle math — "You're buying these separately. Here's what a pack saves you."</div>
+            <div class="lc-step"><div class="lc-step-n">3</div><strong>Day 14:</strong> Replenishment nudge based on product purchase timing</div>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--border);">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="lc-flow-meta">
+            <span class="lc-badge lc-badge-p2">Phase 2</span>
+            <span class="lc-badge lc-badge-count">2 emails</span>
+          </div>
+          <div class="lc-flow-name" style="font-size:17px;">Post-Purchase — Repeat Buyer</div>
+          <div class="lc-flow-trigger">3rd purchase onward</div>
+          <div class="lc-flow-theme">"Deep relationship. Introduce the catalog breadth. Build the habit stack."</div>
+          <div class="lc-steps">
+            <div class="lc-step"><div class="lc-step-n">1</div>Loyalty recognition — "You keep coming back. Here's why we love that."</div>
+            <div class="lc-step"><div class="lc-step-n">2</div>Product education — introduce an adjacent category they haven't tried</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="stage-connector reveal">Stage 4</div>
+
+  <!-- STAGE 4: RETAIN -->
+  <div class="stage-block reveal">
+    <div class="stage-header">
+      <span class="stage-badge">Stage 4</span>
+      <div>
+        <div class="stage-name">Retain</div>
+        <div class="stage-sub">Reactivation &amp; List Health</div>
+      </div>
+    </div>
+    <div class="flows-grid-lc">
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-sms">SMS ✓</span>
+          <span class="lc-badge lc-badge-count">3 emails</span>
+        </div>
+        <div class="lc-flow-name">Winback</div>
+        <div class="lc-flow-trigger">No purchase in 90 days</div>
+        <div class="lc-flow-theme">"Re-engage with value first, offer second. SMS on final touch for last-chance urgency."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div>"Here's what's new" — re-intro, product refreshes, new arrivals</div>
+          <div class="lc-step"><div class="lc-step-n">2</div>Best sellers + social proof — "what members are loving right now"</div>
+          <div class="lc-step"><div class="lc-step-n">3</div>Timed offer + membership reminder · SMS alongside</div>
+        </div>
+      </div>
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p2">Phase 2</span>
+          <span class="lc-badge lc-badge-sms">SMS ✓</span>
+          <span class="lc-badge lc-badge-count">2 emails</span>
+        </div>
+        <div class="lc-flow-name">Member Renewal Reminder</div>
+        <div class="lc-flow-trigger">Annual membership expiring in 14 days</div>
+        <div class="lc-flow-theme">"Protect the membership base. Show them the math on what they've saved."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div><strong>14 days out:</strong> "Your membership is up for renewal — here's what you've saved this year"</div>
+          <div class="lc-step"><div class="lc-step-n">2</div><strong>3 days out:</strong> Urgency + easy renew link · SMS alongside</div>
+        </div>
+      </div>
+
+      <div class="lc-flow-card">
+        <div class="lc-flow-meta">
+          <span class="lc-badge lc-badge-p1">Phase 1</span>
+          <span class="lc-badge lc-badge-count">1 email</span>
+        </div>
+        <div class="lc-flow-name">Sunset</div>
+        <div class="lc-flow-trigger">No engagement in 180 days</div>
+        <div class="lc-flow-theme">"Clean the list. Protect deliverability. A smaller engaged list beats a bloated cold one."</div>
+        <div class="lc-steps">
+          <div class="lc-step"><div class="lc-step-n">1</div>Honest last-chance — "We'll keep you on the list if you want to stay. One click." Suppress non-responders.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Summary bar -->
+  <div style="background-color:var(--forest);border-radius:14px;padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-top:16px;" class="reveal">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(212,160,23,0.6);margin-bottom:6px;">Full System</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;text-transform:uppercase;color:#FFFFFF;line-height:1;">9 Flows · 4 Stages · Full Retention Engine</div>
+    </div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--gold);line-height:1;">7</div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:4px;">Phase 1 Flows</div></div>
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:rgba(212,160,23,0.5);line-height:1;">2</div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:4px;">Phase 2 Flows</div></div>
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--gold);line-height:1;">5</div><div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:4px;">SMS-Enabled</div></div>
+    </div>
+  </div>
+
+</div><!-- /lifecycles-body -->
+
+<footer>
+  <div class="footer-logo">Digits<span>Up</span> — Klaviyo Platinum Partner</div>
+  <div class="footer-note">Prepared for LiveGood · May 2026</div>
+  <div class="footer-contact"><a href="mailto:mike@digitsup.com">mike@digitsup.com</a></div>
+</footer>
+
+</div><!-- /tab-lifecycles -->
+
+
+<!-- ════════════════════════════════════════════════
+     TAB 3: CAMPAIGNS
+════════════════════════════════════════════════ -->
+<div id="tab-campaigns" class="tab-section">
+
+<div class="campaigns-header">
+  <div class="eyebrow-dark">May 2026 · Campaign Calendar</div>
+  <h2 class="title-on-dark">4 Sends/Week.<br><em>Every One Intentional.</em></h2>
+  <p class="body-lg-dark">3 regular campaigns + 1 winback per week = 17 sends in May. Every campaign is pre-segmented, pre-planned, and built around the moments LiveGood's audience is paying attention.</p>
+</div>
+
+<div class="campaigns-body">
+
+  <!-- SEGMENT DEFINITIONS -->
+  <div style="margin-bottom:16px;">
+    <div class="eyebrow-light">Segments</div>
+    <h3 class="title-on-light" style="font-size:clamp(26px,3vw,40px);margin-bottom:24px;">4 Segments.<br><em>Every Send Targeted.</em></h3>
+  </div>
+  <div class="segments-grid reveal">
+    <div class="seg-card">
+      <div class="seg-icon">🏆</div>
+      <div class="seg-name">Members</div>
+      <div class="seg-desc">Active paying members ($9.95/mo or $99.95/yr). Highest LTV. VIP treatment. Expand catalog, drive bundle upgrades, reward loyalty.</div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-icon">💰</div>
+      <div class="seg-name">Non-Member Buyers</div>
+      <div class="seg-desc">Purchased but no membership. Biggest revenue unlock. Every campaign has a soft membership angle. The math closes itself.</div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-icon">👋</div>
+      <div class="seg-name">Engaged Non-Buyers</div>
+      <div class="seg-desc">Subscribed, opening/clicking, haven't purchased. Welcome series running. Campaigns reinforce brand and drive first purchase.</div>
+    </div>
+    <div class="seg-card">
+      <div class="seg-icon">🔄</div>
+      <div class="seg-name">Lapsed Buyers</div>
+      <div class="seg-desc">No purchase in 60–90 days. Winback pool. Separate track — 1 dedicated send per week. Don't mix with regular sends.</div>
+    </div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-block reveal">
+    <div class="week-header">
+      <div class="week-label">Week 1</div>
+      <div class="week-dates">May 1–7</div>
+      <div class="week-theme">Foundation Week</div>
+    </div>
+    <div class="sends-list">
+      <div class="send-row">
+        <div class="send-num">1</div>
+        <div class="send-date">May 1</div>
+        <div><div class="send-name">SMS Consent Drive</div><div class="send-angle">"We're coming to SMS. Opt in for member-only offers and early access."</div></div>
+        <div class="send-segs"><span class="seg-pill seg-all">All Engaged</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">2</div>
+        <div class="send-date">May 5</div>
+        <div><div class="send-name">May Kickoff: Start Strong</div><div class="send-angle">Foundational Five / Daily Essentials — new month, build your stack</div></div>
+        <div class="send-segs"><span class="seg-pill seg-members">Members</span><span class="seg-pill seg-engaged">Engaged Non-Buyers</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">3</div>
+        <div class="send-date">May 7</div>
+        <div><div class="send-name">The Membership Math</div><div class="send-angle">"You saved $X on your last order. Members would've saved $Y. Here's the math."</div></div>
+        <div class="send-segs"><span class="seg-pill seg-nonmember">Non-Member Buyers</span></div>
+      </div>
+      <div class="send-row winback">
+        <div class="send-num">W</div>
+        <div class="send-date">May 7</div>
+        <div><div class="send-name">Winback: Re-Intro</div><div class="send-angle">"A lot has changed. Worth a look." — soft re-intro, no hard sell</div></div>
+        <div class="send-segs"><span class="seg-pill seg-lapsed">Lapsed 60–90d</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-block reveal">
+    <div class="week-header">
+      <div class="week-label">Week 2</div>
+      <div class="week-dates">May 8–14</div>
+      <div class="week-theme">Mother's Day</div>
+    </div>
+    <div class="sends-list">
+      <div class="send-row">
+        <div class="send-num">4</div>
+        <div class="send-date">May 8</div>
+        <div><div class="send-name">Mother's Day Gift Guide</div><div class="send-angle">Skincare Pack + wellness stacks — gift positioning</div></div>
+        <div class="send-segs"><span class="seg-pill seg-all">All Segments</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">5</div>
+        <div class="send-date">May 9</div>
+        <div><div class="send-name">Last Chance — Order by Today</div><div class="send-angle">Delivery cutoff urgency</div></div>
+        <div class="send-segs"><span class="seg-pill seg-all">All Segments</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">6</div>
+        <div class="send-date">May 12</div>
+        <div><div class="send-name">Post-Mother's Day Pivot</div><div class="send-angle">Energy + Performance push — summer is coming</div></div>
+        <div class="send-segs"><span class="seg-pill seg-members">Members</span><span class="seg-pill seg-engaged">Engaged Non-Buyers</span></div>
+      </div>
+      <div class="send-row winback">
+        <div class="send-num">W</div>
+        <div class="send-date">May 14</div>
+        <div><div class="send-name">Winback: Make an Offer</div><div class="send-angle">Incentive-forward — come back with a reason</div></div>
+        <div class="send-segs"><span class="seg-pill seg-lapsed">Lapsed 60–90d</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-block reveal">
+    <div class="week-header">
+      <div class="week-label">Week 3</div>
+      <div class="week-dates">May 15–21</div>
+      <div class="week-theme">Education &amp; Authority</div>
+    </div>
+    <div class="sends-list">
+      <div class="send-row">
+        <div class="send-num">7</div>
+        <div class="send-date">May 15</div>
+        <div><div class="send-name">Ingredient Story: Super Greens</div><div class="send-angle">Deep-dive on what's actually in it — ingredient authority</div></div>
+        <div class="send-segs"><span class="seg-pill seg-all">All Engaged</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">8</div>
+        <div class="send-date">May 19</div>
+        <div><div class="send-name">92% of Americans Are Deficient</div><div class="send-angle">LiveGood's own stat — awareness play drives first purchase</div></div>
+        <div class="send-segs"><span class="seg-pill seg-engaged">Engaged Non-Buyers</span><span class="seg-pill seg-lapsed">Lapsed</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">9</div>
+        <div class="send-date">May 21</div>
+        <div><div class="send-name">Pack Math: Stop Buying Separately</div><div class="send-angle">Bundle value — you're paying more buying individually</div></div>
+        <div class="send-segs"><span class="seg-pill seg-members">Members</span><span class="seg-pill seg-nonmember">Non-Member Buyers</span></div>
+      </div>
+      <div class="send-row winback">
+        <div class="send-num">W</div>
+        <div class="send-date">May 21</div>
+        <div><div class="send-name">Winback: Last Chance</div><div class="send-angle">Final send before suppression</div></div>
+        <div class="send-segs"><span class="seg-pill seg-lapsed">Lapsed 90+d</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="week-block reveal">
+    <div class="week-header">
+      <div class="week-label">Week 4</div>
+      <div class="week-dates">May 22–31</div>
+      <div class="week-theme">Memorial Day + Summer</div>
+    </div>
+    <div class="sends-list">
+      <div class="send-row">
+        <div class="send-num">10</div>
+        <div class="send-date">May 22</div>
+        <div><div class="send-name">Memorial Day — Perform Like It</div><div class="send-angle">Fitness/performance/summer body — Muscle + Energy packs</div></div>
+        <div class="send-segs"><span class="seg-pill seg-members">Members</span><span class="seg-pill seg-nonmember">Non-Member Buyers</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">11</div>
+        <div class="send-date">May 26</div>
+        <div><div class="send-name">Memorial Day Send</div><div class="send-angle">Last day push — summer is here</div></div>
+        <div class="send-segs"><span class="seg-pill seg-all">All Engaged</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">12</div>
+        <div class="send-date">May 28</div>
+        <div><div class="send-name">Summer Prep Stack</div><div class="send-angle">Weight management + hydration + energy — summer goal framing</div></div>
+        <div class="send-segs"><span class="seg-pill seg-engaged">Engaged Non-Buyers</span><span class="seg-pill seg-nonmember">Non-Member Buyers</span></div>
+      </div>
+      <div class="send-row">
+        <div class="send-num">13</div>
+        <div class="send-date">May 30</div>
+        <div><div class="send-name">May Wrap + June Preview</div><div class="send-angle">Keep momentum — tease what's coming in June</div></div>
+        <div class="send-segs"><span class="seg-pill seg-members">Members</span></div>
+      </div>
+      <div class="send-row winback">
+        <div class="send-num">W</div>
+        <div class="send-date">May 28</div>
+        <div><div class="send-name">SMS Winback Final</div><div class="send-angle">Final SMS touchpoint before suppression</div></div>
+        <div class="send-segs"><span class="seg-pill seg-lapsed">Lapsed SMS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL BAR -->
+  <div class="sends-total reveal">
+    <div class="sends-total-text">
+      <strong>13 regular sends</strong> · 4 winback sends · 1 SMS consent blast<br>
+      Every send pre-segmented, pre-planned, and built around real audience moments.
+    </div>
+    <div style="text-align:right;">
+      <div class="sends-total-num">17</div>
+      <div class="sends-total-label">Sends in May</div>
+    </div>
+  </div>
+
+</div><!-- /campaigns-body -->
+
+<footer>
+  <div class="footer-logo">Digits<span>Up</span> — Klaviyo Platinum Partner</div>
+  <div class="footer-note">Prepared for LiveGood · May 2026</div>
+  <div class="footer-contact"><a href="mailto:mike@digitsup.com">mike@digitsup.com</a></div>
+</footer>
+
+</div><!-- /tab-campaigns -->
+
+</div><!-- /main-content -->
 
 <script>
-  const PASS = 'LG2026';
-
-  function checkPass() {
-    const val = document.getElementById('gate-input').value.trim().toUpperCase();
-    if (val === PASS) {
-      document.getElementById('gate').classList.add('hidden');
-      document.getElementById('main').classList.add('visible');
-      initReveal();
-    } else {
-      const input = document.getElementById('gate-input');
-      document.getElementById('gate-err').textContent = 'Incorrect code — try again.';
-      input.classList.add('shake');
+  /* ── PASSWORD GATE ── */
+  function checkPassword() {
+    const val = document.getElementById('pw-input').value.trim().toUpperCase();
+    const err = document.getElementById('pw-error');
+    if (val === 'LG2026') {
+      const gate = document.getElementById('password-gate');
+      gate.style.transition = 'opacity 0.6s ease';
+      gate.style.opacity = '0';
       setTimeout(() => {
-        input.classList.remove('shake');
-        document.getElementById('gate-err').textContent = '';
-        input.value = '';
-      }, 2000);
+        gate.style.display = 'none';
+        const main = document.getElementById('main-content');
+        main.style.display = 'block';
+        initReveal();
+      }, 600);
+    } else {
+      err.style.opacity = '1';
+      document.getElementById('pw-input').style.borderColor = '#FF6B6B';
+      setTimeout(() => {
+        err.style.opacity = '0';
+        document.getElementById('pw-input').style.borderColor = 'rgba(255,255,255,0.15)';
+      }, 2500);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('gate-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') checkPass();
+  /* ── TAB SWITCHING ── */
+  function switchTab(name, btn) {
+    // hide all tabs
+    document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+    // deactivate all nav buttons
+    document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+    // show selected
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+    // re-run reveal for newly visible tab
+    document.querySelectorAll('#tab-' + name + ' .reveal:not(.visible)').forEach(el => obs.observe(el));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
     });
-  });
+  }, { threshold: 0.07, rootMargin: '0px 0px -32px 0px' });
 
   function initReveal() {
-    const els = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    els.forEach(el => io.observe(el));
+    document.querySelectorAll('#tab-proposal .reveal').forEach(el => obs.observe(el));
   }
 </script>
 </body>
